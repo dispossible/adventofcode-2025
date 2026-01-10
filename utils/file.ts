@@ -35,9 +35,11 @@ export async function writeJsonFile<T>(fileName: string, content: T) {
 }
 
 export function parseNumberList(numberStr: string, separator = " "): number[] {
-    return numberStr
-        .split(separator)
-        .map((s) => s.trim())
-        .filter((s) => !!s)
-        .map((s) => parseInt(s, 10));
+    return numberStr.split(separator).reduce((numbers, numStr) => {
+        const n = parseInt(numStr.trim(), 10);
+        if (!isNaN(n)) {
+            numbers.push(n);
+        }
+        return numbers;
+    }, [] as number[]);
 }
