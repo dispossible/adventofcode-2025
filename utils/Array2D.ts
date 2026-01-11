@@ -9,6 +9,10 @@ export default class Array2D<T = string> {
         return this.array.length;
     }
 
+    get values() {
+        return this.array.map((row) => [...row]);
+    }
+
     get(x: number, y: number): T | undefined {
         return this.array[y]?.[x];
     }
@@ -36,7 +40,7 @@ export default class Array2D<T = string> {
 
                 const value: Array2DValue<T> = {
                     value: this.array[y][x],
-                    position: { x, y },
+                    position: new Position(x, y),
                 };
 
                 x++;
@@ -54,8 +58,7 @@ export default class Array2D<T = string> {
     }
 
     clone(): Array2D<T> {
-        const newArray = this.array.map((row) => [...row]);
-        return new Array2D(newArray);
+        return new Array2D(this.values);
     }
 
     log() {
@@ -63,10 +66,45 @@ export default class Array2D<T = string> {
     }
 }
 
-export type Position = {
-    x: number;
-    y: number;
-};
+export class Position {
+    constructor(public x: number, public y: number) {}
+
+    equals(other: Position): boolean {
+        return this.x === other.x && this.y === other.y;
+    }
+
+    up(amount = 1): Position {
+        return new Position(this.x, this.y - amount);
+    }
+
+    down(amount = 1): Position {
+        return new Position(this.x, this.y + amount);
+    }
+
+    left(amount = 1): Position {
+        return new Position(this.x - amount, this.y);
+    }
+
+    right(amount = 1): Position {
+        return new Position(this.x + amount, this.y);
+    }
+
+    upLeft(amount = 1): Position {
+        return new Position(this.x - amount, this.y - amount);
+    }
+
+    upRight(amount = 1): Position {
+        return new Position(this.x + amount, this.y - amount);
+    }
+
+    downLeft(amount = 1): Position {
+        return new Position(this.x - amount, this.y + amount);
+    }
+
+    downRight(amount = 1): Position {
+        return new Position(this.x + amount, this.y + amount);
+    }
+}
 
 export type Array2DValue<T> = {
     value: T;
